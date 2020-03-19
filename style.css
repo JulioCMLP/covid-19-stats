@@ -1,0 +1,235 @@
+*{
+    font-family: 'Courier New', Courier, monospace;
+    padding: 0;
+    box-sizing: content-box;
+}
+
+*, :after, :before {
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+}
+
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    width: calc(100% - 25px);
+    margin-bottom: 5%;
+}
+
+.flex{
+    display: flex;
+    margin-bottom: 45px;
+}
+
+.h3-gestes{
+    text-align: center; 
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.block{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.places{
+    width: 300px;
+    background: #ddd;
+    border-radius: 4px;
+    margin: 0 5px;
+    text-align: center;
+    padding-top: 5px;
+    overflow: scroll;
+    max-height: 450px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    width: 10em;
+}
+
+li {
+    cursor: pointer;
+    margin: 1em 0;
+    text-align: justify;
+}
+
+.recovered, .deaths, .confirmed{
+    width: 200px;
+    background: #ddd;
+    border-radius: 4px;
+    margin: 0 5px;
+    text-align: center;
+    padding-top: 5px;
+    height: 140px;
+}
+
+.recovered h2{
+    color: #2ecc71;
+}
+
+.deaths h2{
+    color: #e84118;
+}
+
+.places {
+    display: flex;
+    flex-direction: column;
+}
+
+.search{
+    height: 30px;
+    border: none;
+    background: rgb(160, 159, 159);
+    width: 100%;
+    font-size: medium;
+    outline: none;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.gestes{
+    display: flex;
+    justify-content: center;
+} 
+
+h2{
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+
+.gestes h3{
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+::selection {
+    background-color: #e84118;
+    color: white;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    width: 60%;
+}
+  
+.list li:before {
+    content: "👉";
+    margin-right: 5px;
+}
+
+.list li{
+    cursor: default;
+    margin-left: 15px;
+    letter-spacing: 1px;
+    line-height: 1.5em;
+    margin-bottom: 20px;
+}
+
+.date{
+    margin-bottom: 30px;
+}
+
+footer{
+    padding: 20px;
+    display: block;
+    justify-content: center;
+    text-align: center;
+}
+
+.links a{
+    color: #e84118;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.links a:hover {
+    color: #1e90ff;
+}
+
+.links{
+    margin-bottom: 10px;
+}
+
+@media screen and (min-width: 481px) and (max-width: 767px) {
+    .flex{
+        display: block;
+    }
+
+    .recovered, .deaths, .confirmed{
+        width: 100%;
+        margin-bottom: 10px;
+        height: 100px;
+    }
+
+    #chartdiv{
+        margin-bottom: 10px;
+    }
+
+    .list {
+        width: 100%;
+        padding: 0 10px 20px;
+    }
+
+    .links a{
+        font-weight: 600;
+        font-size: 1rem;
+    }
+}
+  
+@media screen and (min-width: 320px) and (max-width: 480px) {
+
+    .flex{
+        display: block;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .recovered, .deaths, .confirmed{
+        width: 100%;
+        margin-bottom: 10px;
+        height: 95px;
+    }
+
+    #chartdiv{
+        margin-bottom: 10px;
+    }
+
+    .block{
+        box-sizing: content-box;
+    }
+
+    .list {
+        width: 100%;
+        padding: 0 10px 20px;
+    }
+
+    .links a{
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+}
+
+@media screen and (min-width: 1200px){
+    .container {
+        width: 1200px;
+    }
+}

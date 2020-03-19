@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="flex">
+            <div id="chartdiv" style="width: 100%; height: 450px;"></div>
+            <div class="block">
+                <div class="confirmed"></div>
+                <div class="deaths"></div>
+                <div class="recovered"></div>
+            </div>
+        </div>
+        <span class="date"></span><br/>
+        <h2>Comment se protéger du coronavirus ?</h2>
+
+        <div class="image">
+            <img src="https://www.gstatic.com/images/hpp/dothefive_90x90t.gif"/>
+        </div>
+
+        <h3 class="h3-gestes">5 Gestes pour freiner la progression</h3>
+        <div class="gestes">
+                
+                    <ul class="list">
+                        <li>
+                            <em>
+                                <b>Se laver les mains fréquemment et correctement :</b>
+                                Se laver les mains fréquemment et correctement : 
+                                "Bien se laver les mains (avec du savon et de l'eau) 
+                                minimise risque d'être contaminer après avoir toucher 
+                                une surface qui a été préalablement contaminée par une 
+                                personne malade.
+                            </em>
+                        </li>
+                        <li>
+                            <em>
+                                <b>Ne pas se toucher le visage :</b> De manière générale et 
+                                particulièrement en période d’épidémie, évitez au maximum de 
+                                porter vos mains à votre nez, votre bouche ou encore vos yeux. 
+                                En effet les mains ont pu être en contact avec des surfaces 
+                                contaminées.
+                            </em>
+                        </li>
+                        <li>
+                            <em>
+                                <b>Eviter les lieux très fréquentés :</b> Il est recommandé d’éviter les
+                                lieux très fréquentés et les
+                                rassemblements, qui sont désormais interdits s'ils dépassent 100 personnes.
+                                Les hôpitaux sont également à éviter autant que possible pour des raisons 
+                                évidentes. Si vous êtes contraints de vous y rendre, respectez scrupuleusement 
+                                les mesures d’hygiène.
+                            </em>
+                        </li>
+                        <li>
+                            <em>
+                                <b>Nettoyer régulièrement votre environnement et les objets que vous utilisé :</b>
+                                Une étude publiée le 4 mars dans la revue américaine JAMA a montré que les 
+                                patients atteints par le virus contaminaient leur chambre et leur salle de 
+                                bains. Pour éviter la propagation du virus, une hygiène rigoureuse est indispensable.
+                            </em>
+                        </li>
+                        <li>
+                            <em>
+                                <b>Maintenir une distance sociale :</b> Il faut observer une distance de sécurité d'un mètre
+                                entre soi et une personne qui tousse ou qui éternue. C'est la distance qui permet de ne
+                                pas être touché par les gouttelettes du nez ou de la bouche susceptibles de contenir le
+                                virus" insiste notre interlocuteur. Lorsque l'endroit est confiné et qu'il n'est pas possible
+                                de respecter cette distance, le spécialiste recommande de "tourner le dos à la personne 
+                                malade, afin que les sécrétions aient moins de risque de toucher le visage.
+                            </em>
+                        </li>
+                    </ul>
+                
+        </div>
+    </div>
+
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/maps.js"></script>
+    <script src="https://www.amcharts.com/lib/4/geodata/worldLow.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+
+    <script>
+        const ul = document.querySelector('.list-country');
+        const url = 'https://covid19.mathdro.id/api';
+
+        am4core.ready(function() {
+            const divConfirmed = document.querySelector('.confirmed');
+            const divDeaths = document.querySelector('.deaths');
+            const divRecovered = document.querySelector('.recovered');
+            const date = document.querySelector('.date');
+
+
+            am4core.useTheme(am4themes_animated);
+            // Create map instance
+            const chart = am4core.create("chartdiv", am4maps.MapChart);
+            
+            chart.geodata = am4geodata_worldLow;
+            
+            var colorSet = new am4core.ColorSet();
+
+            const getData = () =>{
+                return new Promise((resolve, reject)=>{
+                    fetch(url)
+                    .then(data=> data.json())
+                    .then(global=> resolve(global))
+                    .catch(err=> reject(err));
+                });
+            };
+
+            const getCountries = () =>{
+                return new Promise((resolve,reject)=>{
+                    fetch(`${url}/confirmed`)
+                    .then(data=> data.json())
+                    .then((countries)=> resolve(countries))
+                    .catch(err=> resolve(err));
+                });
+            };
+
+            const getStatistics = (id) =>{
+                return new Promise((resolve, reject)=>{
+                    fetch(`${url}/countries/${id}`)
+                    .then(data=> data.json())
+                    .then(stats => {
+                        resolve(stats);
+                    })
+                    .catch(err=> {
+                        resolve(err)
+                    });
+                });
+            };
+
+            getData().then(stats => {
+                divConfirmed.innerHTML = `
+                    Total de cas
+                    <h2>${stats.confirmed.value}</h2>
+                `
+                divDeaths.innerHTML = `
+                    Total de morts
+                    <h2>${stats.deaths.value}</h2>
+                `
+                divRecovered.innerHTML = `
+                    Total de guéris
+                    <h2>${stats.recovered.value}</h2>
+                `
+                date.innerHTML = `
+                    Données mise à jour le : ${moment(stats.lastUpdate).calendar()}
+                `
+            });
+
+            getCountries().then(res=>{
+                console.log(res.length)
+                res.map(({iso2, countryRegion, confirmed})=> {
+                    mapData.push({
+                        id: iso2,
+                        name: countryRegion, 
+                        value: confirmed,
+                        color: '#e84118'
+                        });
+                });
+
+                imageSeries.data = mapData;
+            });
+
+
+            
+            // Set projection
+            chart.projection = new am4maps.projections.Miller();
+            
+            // Create map polygon series
+            const polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+            polygonSeries.exclude = ["AQ"];
+            polygonSeries.useGeodata = true;
+            polygonSeries.nonScalingStroke = true;
+            polygonSeries.strokeWidth = 0.5;
+            polygonSeries.calculateVisualCenter = true;
+
+            const data = [];
+            const mapData = [];
+            
+            const imageSeries = chart.series.push(new am4maps.MapImageSeries());
+            imageSeries.dataFields.value = "value";
+            imageSeries.dataFields.url = "url";
+            
+            const imageTemplate = imageSeries.mapImages.template;
+            imageTemplate.nonScaling = true;
+            
+            // Bubble Config
+            const circle = imageTemplate.createChild(am4core.Circle);
+            circle.fillOpacity = 0.7;
+            circle.propertyFields.fill = "color";
+            circle.cursorOverStyle = am4core.MouseCursorStyle.pointer;
+            circle.tooltipText = "{name}: [bold]{value}[/]";
+            
+            const polygonTemplate = circle;
+            polygonTemplate.events.on("hit", e => {
+                const data = e.target.dataItem.dataContext;
+
+                if(data.id){
+                    console.log(data.id)
+                    getStatistics(data.id).then(stats=>{
+                        console.log(stats)
+                        divConfirmed.innerHTML = `
+                            Nombres de cas
+                            <h2>${stats.confirmed.value}</h2>
+                        `
+                        divDeaths.innerHTML = `
+                            Nombres de morts
+                            <h2>${stats.deaths.value}</h2>
+                        `
+                        divRecovered.innerHTML = `
+                            Nombres de guéris
+                            <h2>${stats.recovered.value}</h2>
+                        `
+                    })
+                }
+
+            });
+            
+            
+            imageSeries.heatRules.push({
+                "target": circle,
+                "property": "radius",
+                "min": 4,
+                "max": 30,
+                "dataField": "value"
+            });
+            
+            imageTemplate.adapter.add("latitude", (latitude, target) => {
+                const polygon = polygonSeries.getPolygonById(target.dataItem.dataContext.id);
+                if(polygon){
+                    return polygon.visualLatitude;
+                }
+                return latitude;
+            })
+            
+            imageTemplate.adapter.add("longitude", (longitude, target) => {
+                const polygon = polygonSeries.getPolygonById(target.dataItem.dataContext.id);
+                if(polygon){
+                    return polygon.visualLongitude;
+                }
+                return longitude;
+            });
+            
+            // Add zoom control
+            chart.zoomControl = new am4maps.ZoomControl();
+            chart.homeZoomLevel = 1.9;
+
+        });
+    </script>
+<footer>
+
+    <div class="links">
+        <a href="mailto:romelusjeanmarie.pro@gmail.com" target="_blank" title="email">EMAIL</a>
+        <a href="https://www.linkedin.com/in/jean-marie-romelus-727957122/" target="_blank" title="linkedin">LINKEDIN</a>
+        <a href="https://github.com/dev-romelus?tab=repositories" target="_blank" title="github">GITHUB</a>
+        <a href="https://twitter.com/Romelus97" target="_blank" title="twitter">TWITTER</a>
+    </div>
+
+    <div class="developer">
+        Développer avec ❤️ par Romelus Jean-Marie 🇫🇷
+    </div>
+    
+</footer>
+</body>
+</html>
