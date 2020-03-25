@@ -4,7 +4,7 @@ am4core.useTheme(am4themes_animated);
 am4core.ready(function () {
 
     const url = 'https://covid19.mathdro.id/api';
-    const ul = document.querySelector('.list-country');
+    const title = document.querySelector('title');
     const divConfirmed = document.querySelector('.confirmed');
     const divDeaths = document.querySelector('.deaths');
     const divRecovered = document.querySelector('.recovered');
